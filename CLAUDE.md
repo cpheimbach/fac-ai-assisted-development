@@ -54,6 +54,8 @@ import './TripCard.module.css'
 - **Direct CRUD operations**: No abstraction layers for demo simplicity
 - **Try-catch error handling**: Standard JavaScript patterns with React error boundaries
 - **CSS Modules**: Scoped styling without CSS-in-JS complexity
+- **Service layer patterns**: Class-based services with singleton exports for business logic
+- **Validation patterns**: Separate validation functions with sanitization and error arrays
 
 ## Development Workflow
 
@@ -92,6 +94,9 @@ pnpm tsc
 
 # Development server
 pnpm dev
+
+# Run TypeScript integration tests
+npx tsx [file-path]
 ```
 
 ## Project Structure

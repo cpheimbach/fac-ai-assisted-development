@@ -27,7 +27,7 @@ dependencies:
 devDependencies:
   '@remix-run/dev':
     specifier: ^2.16.8
-    version: 2.16.8(@remix-run/react@2.16.8)(@remix-run/serve@2.16.8)(typescript@5.8.3)(vite@6.3.5)
+    version: 2.16.8(@remix-run/react@2.16.8)(@remix-run/serve@2.16.8)(tsx@4.20.1)(typescript@5.8.3)(vite@6.3.5)
   '@types/react':
     specifier: ^18.2.20
     version: 18.3.23
@@ -40,6 +40,9 @@ devDependencies:
   '@typescript-eslint/parser':
     specifier: ^6.7.4
     version: 6.21.0(eslint@8.57.1)(typescript@5.8.3)
+  esbuild-register:
+    specifier: ^3.6.0
+    version: 3.6.0(esbuild@0.25.5)
   eslint:
     specifier: ^8.38.0
     version: 8.57.1
@@ -61,12 +64,15 @@ devDependencies:
   prettier:
     specifier: ^3.5.3
     version: 3.5.3
+  tsx:
+    specifier: ^4.20.1
+    version: 4.20.1
   typescript:
     specifier: ^5.1.6
     version: 5.8.3
   vite:
     specifier: ^6.0.0
-    version: 6.3.5
+    version: 6.3.5(tsx@4.20.1)
   vite-tsconfig-paths:
     specifier: ^4.2.1
     version: 4.3.2(typescript@5.8.3)(vite@6.3.5)
@@ -1254,7 +1260,7 @@ packages:
     dev: true
     optional: true
 
-  /@remix-run/dev@2.16.8(@remix-run/react@2.16.8)(@remix-run/serve@2.16.8)(typescript@5.8.3)(vite@6.3.5):
+  /@remix-run/dev@2.16.8(@remix-run/react@2.16.8)(@remix-run/serve@2.16.8)(tsx@4.20.1)(typescript@5.8.3)(vite@6.3.5):
     resolution: {integrity: sha512-2EKByaD5CDwh7H56UFVCqc90kCZ9LukPlSwkcsR3gj7WlfL7sXtcIqIopcToAlKAeao3HDbhBlBT2CTOivxZCg==}
     engines: {node: '>=18.0.0'}
     hasBin: true
@@ -1331,8 +1337,8 @@ packages:
       tsconfig-paths: 4.2.0
       typescript: 5.8.3
       valibot: 0.41.0(typescript@5.8.3)
-      vite: 6.3.5
-      vite-node: 3.2.3
+      vite: 6.3.5(tsx@4.20.1)
+      vite-node: 3.2.3(tsx@4.20.1)
       ws: 7.5.10
     transitivePeerDependencies:
       - '@types/node'
@@ -2982,6 +2988,17 @@ packages:
       esbuild: 0.17.6
       local-pkg: 1.1.1
       resolve.exports: 2.0.3
+    dev: true
+
+  /esbuild-register@3.6.0(esbuild@0.25.5):
+    resolution: {integrity: sha512-H2/S7Pm8a9CL1uhp9OvjwrBh5Pvx0H8qVOxNu8Wed9Y7qv56MPtq+GGM8RJpq6glYJn9Wspr8uw7l55uyinNeg==}
+    peerDependencies:
+      esbuild: '>=0.12 <1'
+    dependencies:
+      debug: 4.4.1
+      esbuild: 0.25.5
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /esbuild@0.17.6:
@@ -6411,6 +6428,17 @@ packages:
     dev: true
     optional: true
 
+  /tsx@4.20.1:
+    resolution: {integrity: sha512-JsFUnMHIE+g8KllOvWTrSOwCKM10xLcsesvUQR61znsbrcwZ4U/QaqdymmvTqG5GMD7k2VFv9UG35C4dRy34Ag==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
+    dependencies:
+      esbuild: 0.25.5
+      get-tsconfig: 4.10.1
+    optionalDependencies:
+      fsevents: 2.3.3
+    dev: true
+
   /turbo-stream@2.4.1:
     resolution: {integrity: sha512-v8kOJXpG3WoTN/+at8vK7erSzo6nW6CIaeOvNOkHQVDajfz1ZVeSxCbc6tOH4hrGZW7VUCV0TOXd8CPzYnYkrw==}
 
@@ -6725,7 +6753,7 @@ packages:
       - terser
     dev: true
 
-  /vite-node@3.2.3:
+  /vite-node@3.2.3(tsx@4.20.1):
     resolution: {integrity: sha512-gc8aAifGuDIpZHrPjuHyP4dpQmYXqWw7D1GmDnWeNWP654UEXzVfQ5IHPSK5HaHkwB/+p1atpYpSdw/2kOv8iQ==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
@@ -6734,7 +6762,7 @@ packages:
       debug: 4.4.1
       es-module-lexer: 1.7.0
       pathe: 2.0.3
-      vite: 6.3.5
+      vite: 6.3.5(tsx@4.20.1)
     transitivePeerDependencies:
       - '@types/node'
       - jiti
@@ -6761,7 +6789,7 @@ packages:
       debug: 4.4.1
       globrex: 0.1.2
       tsconfck: 3.1.6(typescript@5.8.3)
-      vite: 6.3.5
+      vite: 6.3.5(tsx@4.20.1)
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -6805,7 +6833,7 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vite@6.3.5:
+  /vite@6.3.5(tsx@4.20.1):
     resolution: {integrity: sha512-cZn6NDFE7wdTpINgs++ZJ4N49W2vRp8LCKrn3Ob1kYNtOo21vfDoaV5GzBfLU4MovSAB8uNRm4jgzVQZ+mBzPQ==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
@@ -6851,6 +6879,7 @@ packages:
       postcss: 8.5.4
       rollup: 4.43.0
       tinyglobby: 0.2.14
+      tsx: 4.20.1
     optionalDependencies:
       fsevents: 2.3.3
     dev: true
