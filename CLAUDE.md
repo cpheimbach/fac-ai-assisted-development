@@ -27,15 +27,15 @@ A travel planning web application focused on trip management with integrated wea
 
 ```typescript
 // External
-import React from 'react';
-import { useNavigate } from '@remix-run/react';
+import React from 'react'
+import { useNavigate } from '@remix-run/react'
 
 // Internal
-import { Trip } from '~/domains/trip-management/types/trip';
-import { WeatherService } from '~/domains/weather/services/weatherService';
+import { Trip } from '~/domains/trip-management/types/trip'
+import { WeatherService } from '~/domains/weather/services/weatherService'
 
 // Relative
-import './TripCard.module.css';
+import './TripCard.module.css'
 ```
 
 ### Naming Conventions

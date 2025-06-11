@@ -16,16 +16,16 @@ This is different from reviewing human-written code. AI confidently generates bo
 
 ```javascript
 // You asked for a simple task form, but AI added:
-const handleSubmit = async (formData) => {
+const handleSubmit = async formData => {
   // ✅ Expected: basic form submission
-  await createTask(formData);
+  await createTask(formData)
 
   // 🤔 Unexpected: auto-assigns to current user
-  formData.assignedTo = currentUser.id;
+  formData.assignedTo = currentUser.id
 
   // 🚨 Concerning: sends analytics without consent
-  analytics.track("task_created", formData);
-};
+  analytics.track('task_created', formData)
+}
 ```
 
 **When you find unexpected behaviour, return to Iterate/Question:**
@@ -54,33 +54,33 @@ AI often generates code that works in isolation but fails in production:
 
 ```javascript
 // 🚨 AI's first attempt - no error handling
-const saveTask = async (task) => {
-  const response = await fetch("/api/tasks", {
-    method: "POST",
+const saveTask = async task => {
+  const response = await fetch('/api/tasks', {
+    method: 'POST',
     body: JSON.stringify(task),
-  });
-  return response.json();
-};
+  })
+  return response.json()
+}
 
 // ✅ After your review and iteration
-const saveTask = async (task) => {
+const saveTask = async task => {
   try {
-    const response = await fetch("/api/tasks", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    const response = await fetch('/api/tasks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(task),
-    });
+    })
 
     if (!response.ok) {
-      throw new Error(`Failed to save task: ${response.status}`);
+      throw new Error(`Failed to save task: ${response.status}`)
     }
 
-    return await response.json();
+    return await response.json()
   } catch (error) {
-    console.error("Task save failed:", error);
-    throw error;
+    console.error('Task save failed:', error)
+    throw error
   }
-};
+}
 ```
 
 ### The "kitchen sink" anti-pattern
@@ -91,18 +91,18 @@ AI includes unnecessary complexity:
 // 🚨 Over-engineered for a simple Kanban board
 class TaskStateManagerFactory {
   constructor(config) {
-    this.observers = [];
-    this.middleware = [];
-    this.reducers = new Map();
+    this.observers = []
+    this.middleware = []
+    this.reducers = new Map()
   }
 
   createManager() {
-    return new TaskStateManager(this.config);
+    return new TaskStateManager(this.config)
   }
 }
 
 // ✅ What you actually need
-const [tasks, setTasks] = useState([]);
+const [tasks, setTasks] = useState([])
 ```
 
 ### The "inconsistent patterns" anti-pattern
@@ -112,22 +112,22 @@ Mixed approaches within the same codebase:
 ```javascript
 // 🚨 The AI used different patterns for similar functions
 function addTask(task) {
-  return { type: "ADD_TASK", payload: task }; // Redux pattern
+  return { type: 'ADD_TASK', payload: task } // Redux pattern
 }
 
 function updateTask(id, changes) {
-  setTasks((prev) =>
+  setTasks(prev =>
     prev.map(
       (
         t // React state pattern
       ) => (t.id === id ? { ...t, ...changes } : t)
     )
-  );
+  )
 }
 
 function deleteTask(taskId) {
-  fetch(`/api/tasks/${taskId}`, { method: "DELETE" }) // Direct API call
-    .then(() => loadTasks());
+  fetch(`/api/tasks/${taskId}`, { method: 'DELETE' }) // Direct API call
+    .then(() => loadTasks())
 }
 ```
 
@@ -141,58 +141,58 @@ AI loves to generate massive functions that repeat similar logic instead of extr
 ```javascript
 // 🚨 AI generated separate functions for each status change
 function moveTaskToInProgress(taskId) {
-  const task = tasks.find((t) => t.id === taskId);
-  if (task && task.status === "todo") {
-    task.status = "in-progress";
-    task.updatedAt = new Date().toISOString();
-    task.updatedBy = getCurrentUser().id;
-    saveTask(task);
-    updateUI();
-    logActivity("task_moved", { taskId, from: "todo", to: "in-progress" });
-    sendNotification(task.assignee, "Task moved to in progress");
+  const task = tasks.find(t => t.id === taskId)
+  if (task && task.status === 'todo') {
+    task.status = 'in-progress'
+    task.updatedAt = new Date().toISOString()
+    task.updatedBy = getCurrentUser().id
+    saveTask(task)
+    updateUI()
+    logActivity('task_moved', { taskId, from: 'todo', to: 'in-progress' })
+    sendNotification(task.assignee, 'Task moved to in progress')
   }
 }
 
 function moveTaskToCompleted(taskId) {
-  const task = tasks.find((t) => t.id === taskId);
-  if (task && task.status === "in-progress") {
-    task.status = "completed";
-    task.updatedAt = new Date().toISOString();
-    task.updatedBy = getCurrentUser().id;
-    task.completedAt = new Date().toISOString();
-    saveTask(task);
-    updateUI();
-    logActivity("task_moved", { taskId, from: "in-progress", to: "completed" });
-    sendNotification(task.assignee, "Task completed");
+  const task = tasks.find(t => t.id === taskId)
+  if (task && task.status === 'in-progress') {
+    task.status = 'completed'
+    task.updatedAt = new Date().toISOString()
+    task.updatedBy = getCurrentUser().id
+    task.completedAt = new Date().toISOString()
+    saveTask(task)
+    updateUI()
+    logActivity('task_moved', { taskId, from: 'in-progress', to: 'completed' })
+    sendNotification(task.assignee, 'Task completed')
   }
 }
 
 function moveTaskToTodo(taskId) {
-  const task = tasks.find((t) => t.id === taskId);
-  if (task && (task.status === "in-progress" || task.status === "completed")) {
-    const oldStatus = task.status;
-    task.status = "todo";
-    task.updatedAt = new Date().toISOString();
-    task.updatedBy = getCurrentUser().id;
-    if (task.completedAt) task.completedAt = null;
-    saveTask(task);
-    updateUI();
-    logActivity("task_moved", { taskId, from: oldStatus, to: "todo" });
-    sendNotification(task.assignee, "Task moved back to todo");
+  const task = tasks.find(t => t.id === taskId)
+  if (task && (task.status === 'in-progress' || task.status === 'completed')) {
+    const oldStatus = task.status
+    task.status = 'todo'
+    task.updatedAt = new Date().toISOString()
+    task.updatedBy = getCurrentUser().id
+    if (task.completedAt) task.completedAt = null
+    saveTask(task)
+    updateUI()
+    logActivity('task_moved', { taskId, from: oldStatus, to: 'todo' })
+    sendNotification(task.assignee, 'Task moved back to todo')
   }
 }
 
 // ✅ DRY principle applied - one function handles all moves
 function moveTask(taskId, newStatus) {
-  const task = tasks.find((t) => t.id === taskId);
-  if (!task || !isValidStatusTransition(task.status, newStatus)) return;
+  const task = tasks.find(t => t.id === taskId)
+  if (!task || !isValidStatusTransition(task.status, newStatus)) return
 
-  const oldStatus = task.status;
-  updateTaskStatus(task, newStatus);
-  saveTask(task);
-  updateUI();
-  logActivity("task_moved", { taskId, from: oldStatus, to: newStatus });
-  sendNotification(task.assignee, `Task moved to ${newStatus}`);
+  const oldStatus = task.status
+  updateTaskStatus(task, newStatus)
+  saveTask(task)
+  updateUI()
+  logActivity('task_moved', { taskId, from: oldStatus, to: newStatus })
+  sendNotification(task.assignee, `Task moved to ${newStatus}`)
 }
 ```
 
@@ -239,14 +239,14 @@ AI may invent packages or methods that don't exist:
 
 ```javascript
 // 🚨 Non-existent packages AI confidently suggested
-import { validateTask } from "react-task-validator"; // Doesn't exist
-import { KanbanBoard } from "@material-ui/kanban"; // Not a real package
-import { useTaskState } from "redux-task-hooks"; // Made up
+import { validateTask } from 'react-task-validator' // Doesn't exist
+import { KanbanBoard } from '@material-ui/kanban' // Not a real package
+import { useTaskState } from 'redux-task-hooks' // Made up
 
 // 🚨 Non-existent methods
-tasks.sortByPriority(); // Array.prototype.sortByPriority doesn't exist
-element.fadeInOut(500); // Not a DOM method
-database.findTasksOptimised(); // Custom method that doesn't exist in your DB layer
+tasks.sortByPriority() // Array.prototype.sortByPriority doesn't exist
+element.fadeInOut(500) // Not a DOM method
+database.findTasksOptimised() // Custom method that doesn't exist in your DB layer
 ```
 
 **Red flag**: If you don't recognise a package or method, **be suspicious**. Check:
@@ -263,78 +263,78 @@ AI often includes mocked data to make examples work:
 // 🚨 Hardcoded data that won't work in real scenarios
 const TaskList = () => {
   const [tasks, setTasks] = useState([
-    { id: 1, title: "Fix bug", status: "todo", assignee: "john@example.com" },
+    { id: 1, title: 'Fix bug', status: 'todo', assignee: 'john@example.com' },
     {
       id: 2,
-      title: "Add feature",
-      status: "in-progress",
-      assignee: "jane@example.com",
+      title: 'Add feature',
+      status: 'in-progress',
+      assignee: 'jane@example.com',
     },
     {
       id: 3,
-      title: "Review code",
-      status: "completed",
-      assignee: "bob@example.com",
+      title: 'Review code',
+      status: 'completed',
+      assignee: 'bob@example.com',
     },
-  ]);
+  ])
 
   // Hardcoded user that may not exist
   const currentUser = {
-    id: "user123",
-    name: "John Doe",
-    email: "john@example.com",
-  };
+    id: 'user123',
+    name: 'John Doe',
+    email: 'john@example.com',
+  }
 
   // Fixed API endpoint that might not match your backend
-  const API_BASE = "http://localhost:3000/api";
+  const API_BASE = 'http://localhost:3000/api'
 
   return (
     <div>
-      {tasks.map((task) => (
+      {tasks.map(task => (
         <TaskCard key={task.id} task={task} />
       ))}
     </div>
-  );
-};
+  )
+}
 
 // ✅ Production-ready approach
 const TaskList = () => {
-  const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const currentUser = useAuth();
-  const API_BASE = process.env.NEXT_PUBLIC_API_URL;
+  const [tasks, setTasks] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const currentUser = useAuth()
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL
 
   useEffect(() => {
-    loadTasks();
-  }, []);
+    loadTasks()
+  }, [])
 
   const loadTasks = async () => {
     try {
-      setLoading(true);
-      const response = await fetch(`${API_BASE}/tasks`);
-      if (!response.ok) throw new Error("Failed to load tasks");
-      const data = await response.json();
-      setTasks(data);
+      setLoading(true)
+      const response = await fetch(`${API_BASE}/tasks`)
+      if (!response.ok) throw new Error('Failed to load tasks')
+      const data = await response.json()
+      setTasks(data)
     } catch (err) {
-      setError(err.message);
+      setError(err.message)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
-  if (loading) return <LoadingSpinner />;
-  if (error) return <ErrorMessage error={error} />;
-  if (tasks.length === 0) return <EmptyState />;
+  if (loading) return <LoadingSpinner />
+  if (error) return <ErrorMessage error={error} />
+  if (tasks.length === 0) return <EmptyState />
 
   return (
     <div>
-      {tasks.map((task) => (
+      {tasks.map(task => (
         <TaskCard key={task.id} task={task} />
       ))}
     </div>
-  );
-};
+  )
+}
 ```
 
 ## Security review checklist
@@ -348,47 +348,47 @@ AI-generated code has a 40-48% higher vulnerability rate than human code. Check 
 const createTask = (title, description) => {
   database.query(
     `INSERT INTO tasks (title, description) VALUES ('${title}', '${description}')`
-  );
-};
+  )
+}
 
 // ✅ Proper validation and parameterisation
 const createTask = (title, description) => {
   if (!title || title.length > 100) {
-    throw new Error("Invalid title");
+    throw new Error('Invalid title')
   }
   return database.query(
-    "INSERT INTO tasks (title, description) VALUES (?, ?)",
+    'INSERT INTO tasks (title, description) VALUES (?, ?)',
     [title, description]
-  );
-};
+  )
+}
 ```
 
 ### XSS vulnerabilities
 
 ```javascript
 // 🚨 Dangerous innerHTML usage
-taskElement.innerHTML = `<h3>${task.title}</h3><p>${task.description}</p>`;
+taskElement.innerHTML = `<h3>${task.title}</h3><p>${task.description}</p>`
 
 // ✅ Safe text content
-taskElement.querySelector(".title").textContent = task.title;
-taskElement.querySelector(".description").textContent = task.description;
+taskElement.querySelector('.title').textContent = task.title
+taskElement.querySelector('.description').textContent = task.description
 ```
 
 ### Authentication issues
 
 ```javascript
 // 🚨 Missing access control
-app.delete("/api/tasks/:id", (req, res) => {
-  deleteTask(req.params.id);
-});
+app.delete('/api/tasks/:id', (req, res) => {
+  deleteTask(req.params.id)
+})
 
 // ✅ Proper authentication
-app.delete("/api/tasks/:id", authenticateUser, (req, res) => {
+app.delete('/api/tasks/:id', authenticateUser, (req, res) => {
   if (!canUserDeleteTask(req.user, req.params.id)) {
-    return res.status(403).json({ error: "Forbidden" });
+    return res.status(403).json({ error: 'Forbidden' })
   }
-  deleteTask(req.params.id);
-});
+  deleteTask(req.params.id)
+})
 ```
 
 ## Architectural alignment check
@@ -400,15 +400,15 @@ Does the code follow your project's established patterns?
 ```javascript
 // 🚨 AI created inconsistent component structure
 function TaskCard({ task }) {
-  const [editing, setEditing] = useState(false);
-  const [title, setTitle] = useState(task.title);
+  const [editing, setEditing] = useState(false)
+  const [title, setTitle] = useState(task.title)
   // Inline state management when you're using a store elsewhere
 }
 
 // ✅ Follows your established patterns
 function TaskCard({ task, onUpdate }) {
-  const dispatch = useAppDispatch(); // Consistent with other components
-  const isEditing = useSelector((state) => state.ui.editingTask === task.id);
+  const dispatch = useAppDispatch() // Consistent with other components
+  const isEditing = useSelector(state => state.ui.editingTask === task.id)
 }
 ```
 
@@ -417,17 +417,17 @@ function TaskCard({ task, onUpdate }) {
 ```javascript
 // 🚨 Mixed error handling approaches
 try {
-  await saveTask(task);
+  await saveTask(task)
 } catch (error) {
-  console.error(error); // Different from rest of app
+  console.error(error) // Different from rest of app
 }
 
 // ✅ Consistent with your error handling pattern
 try {
-  await saveTask(task);
+  await saveTask(task)
 } catch (error) {
-  showNotification("error", "Failed to save task");
-  reportError(error);
+  showNotification('error', 'Failed to save task')
+  reportError(error)
 }
 ```
 
