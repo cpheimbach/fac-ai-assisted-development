@@ -1,11 +1,19 @@
 import { AppStore } from './store'
 import { persistenceService } from './persistence'
 
+interface MigrationData {
+  trips?: unknown[] | Map<string, unknown>
+  weather?: unknown[] | Map<string, unknown>
+  lastSync?: string | Date
+  _migrationState?: MigrationState
+  [key: string]: unknown
+}
+
 export interface Migration {
   version: string
   description: string
-  up: (data: any) => any
-  down: (data: any) => any
+  up: (data: MigrationData) => MigrationData
+  down: (data: MigrationData) => MigrationData
 }
 
 export interface MigrationState {
@@ -20,20 +28,21 @@ export const migrations: Migration[] = [
   {
     version: '1.0.0',
     description: 'Initial data structure',
-    up: (data: any) => {
-      if (!data.trips) data.trips = []
-      if (!data.weather) data.weather = []
-      if (!data.lastSync) data.lastSync = new Date().toISOString()
-      return data
+    up: (data: MigrationData): MigrationData => {
+      const result = { ...data }
+      if (!result.trips) result.trips = []
+      if (!result.weather) result.weather = []
+      if (!result.lastSync) result.lastSync = new Date().toISOString()
+      return result
     },
-    down: (data: any) => {
-      return data
+    down: (data: MigrationData): MigrationData => {
+      return { ...data }
     }
   }
 ]
 
 class MigrationService {
-  private getMigrationState(data: any): MigrationState {
+  private getMigrationState(data: MigrationData): MigrationState {
     return data._migrationState || {
       currentVersion: '0.0.0',
       appliedMigrations: [],
@@ -41,7 +50,7 @@ class MigrationService {
     }
   }
 
-  private setMigrationState(data: any, state: MigrationState): void {
+  private setMigrationState(data: MigrationData, state: MigrationState): void {
     data._migrationState = {
       ...state,
       lastMigration: new Date()
@@ -63,12 +72,12 @@ class MigrationService {
     return 0
   }
 
-  needsMigration(data: any): boolean {
+  needsMigration(data: MigrationData): boolean {
     const migrationState = this.getMigrationState(data)
     return this.compareVersions(migrationState.currentVersion, CURRENT_VERSION) < 0
   }
 
-  async migrate(data: any): Promise<any> {
+  async migrate(data: MigrationData): Promise<MigrationData> {
     try {
       const migrationState = this.getMigrationState(data)
       const currentVersion = migrationState.currentVersion
@@ -109,7 +118,7 @@ class MigrationService {
     }
   }
 
-  async rollback(data: any, targetVersion: string): Promise<any> {
+  async rollback(data: MigrationData, targetVersion: string): Promise<MigrationData> {
     try {
       const migrationState = this.getMigrationState(data)
       
@@ -150,7 +159,7 @@ class MigrationService {
     }
   }
 
-  getMigrationInfo(data: any): {
+  getMigrationInfo(data: MigrationData): {
     currentVersion: string
     targetVersion: string
     needsMigration: boolean
@@ -172,11 +181,11 @@ class MigrationService {
     try {
       const rawData = await persistenceService.load()
       
-      if (this.needsMigration(rawData)) {
+      if (this.needsMigration(rawData as MigrationData)) {
         console.log('Data migration required, applying migrations...')
-        const migratedData = await this.migrate(rawData)
-        await persistenceService.save(migratedData)
-        return migratedData
+        const migratedData = await this.migrate(rawData as MigrationData)
+        await persistenceService.save(migratedData as AppStore)
+        return migratedData as AppStore
       }
       
       return rawData
