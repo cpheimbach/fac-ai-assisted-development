@@ -1,6 +1,3 @@
-import * as fs from 'fs/promises'
-import * as path from 'path'
-
 import { Trip } from '../domains/trip-management/types/trip'
 import { WeatherData } from '../domains/weather/types/weather'
 import { AppStore } from './store'
@@ -18,192 +15,143 @@ interface SerializedStore {
   lastSync: string
 }
 
-class FilePersistenceService implements PersistenceService {
-  private readonly dataDir: string
-  private readonly dataFile: string
-  private readonly backupDir: string
+// Browser-compatible LocalStorage persistence service
+class BrowserPersistenceService implements PersistenceService {
+  private readonly storageKey = 'travel-app-store'
+  private readonly backupKey = 'travel-app-backup'
 
   constructor() {
-    this.dataDir = path.join(process.cwd(), 'data')
-    this.dataFile = path.join(this.dataDir, 'store.json')
-    this.backupDir = path.join(this.dataDir, 'backups')
-  }
-
-  private async ensureDirectories(): Promise<void> {
-    try {
-      await fs.mkdir(this.dataDir, { recursive: true })
-      await fs.mkdir(this.backupDir, { recursive: true })
-    } catch (error) {
-      throw new Error(`Failed to create data directories: ${error instanceof Error ? error.message : 'Unknown error'}`)
-    }
+    console.log('Using browser-compatible persistence with localStorage')
   }
 
   private serializeStore(store: AppStore): SerializedStore {
     return {
-      trips: Array.from(store.trips.entries()).map(([key, trip]) => [
-        key,
-        {
-          ...trip,
-          startDate: trip.startDate,
-          endDate: trip.endDate,
-          createdAt: trip.createdAt,
-          updatedAt: trip.updatedAt
-        }
-      ]),
-      weather: Array.from(store.weather.entries()).map(([key, weather]) => [
-        key,
-        {
-          ...weather,
-          lastUpdated: weather.lastUpdated,
-          forecast: weather.forecast.map((forecast) => ({
-            ...forecast,
-            date: forecast.date
-          }))
-        }
-      ]),
+      trips: Array.from(store.trips.entries()),
+      weather: Array.from(store.weather.entries()),
       lastSync: store.lastSync.toISOString()
     }
   }
 
   private deserializeStore(serialized: SerializedStore): AppStore {
-    const trips = new Map<string, Trip>()
-    serialized.trips.forEach(([key, trip]) => {
-      trips.set(key, {
+    const tripsMap = new Map<string, Trip>()
+    serialized.trips.forEach(([id, trip]) => {
+      // Convert date strings back to Date objects
+      const convertedTrip: Trip = {
         ...trip,
         startDate: new Date(trip.startDate),
         endDate: new Date(trip.endDate),
         createdAt: new Date(trip.createdAt),
         updatedAt: new Date(trip.updatedAt)
-      })
+      }
+      tripsMap.set(id, convertedTrip)
     })
 
-    const weather = new Map<string, WeatherData>()
-    serialized.weather.forEach(([key, weatherData]) => {
-      weather.set(key, {
-        ...weatherData,
-        lastUpdated: new Date(weatherData.lastUpdated),
-        forecast: weatherData.forecast.map((forecast) => ({
-          ...forecast,
-          date: new Date(forecast.date)
+    const weatherMap = new Map<string, WeatherData>()
+    serialized.weather.forEach(([location, weather]) => {
+      const convertedWeather: WeatherData = {
+        ...weather,
+        lastUpdated: new Date(weather.lastUpdated),
+        forecast: weather.forecast.map(f => ({
+          ...f,
+          date: new Date(f.date)
         }))
-      })
+      }
+      weatherMap.set(location, convertedWeather)
     })
 
     return {
-      trips,
-      weather,
+      trips: tripsMap,
+      weather: weatherMap,
       lastSync: new Date(serialized.lastSync)
     }
   }
 
   async save(data: AppStore): Promise<void> {
     try {
-      await this.ensureDirectories()
-      
       const serialized = this.serializeStore(data)
       const jsonData = JSON.stringify(serialized, null, 2)
       
-      await fs.writeFile(this.dataFile, jsonData, 'utf-8')
+      if (typeof window !== 'undefined' && window.localStorage) {
+        window.localStorage.setItem(this.storageKey, jsonData)
+        console.log('Data saved to localStorage successfully')
+      } else {
+        console.warn('localStorage not available, data not persisted')
+      }
     } catch (error) {
-      throw new Error(`Failed to save data: ${error instanceof Error ? error.message : 'Unknown error'}`)
+      console.error('Failed to save data to localStorage:', error)
+      throw new Error(`Failed to save store: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
   }
 
   async load(): Promise<AppStore> {
     try {
-      await this.ensureDirectories()
-      
-      const fileExists = await fs.access(this.dataFile).then(() => true).catch(() => false)
-      
-      if (!fileExists) {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        const jsonData = window.localStorage.getItem(this.storageKey)
+        
+        if (!jsonData) {
+          console.log('No existing data found in localStorage, returning empty store')
+          return {
+            trips: new Map(),
+            weather: new Map(),
+            lastSync: new Date()
+          }
+        }
+
+        const serialized: SerializedStore = JSON.parse(jsonData)
+        const store = this.deserializeStore(serialized)
+        console.log('Data loaded from localStorage successfully')
+        return store
+      } else {
+        console.warn('localStorage not available, returning empty store')
         return {
-          trips: new Map<string, Trip>(),
-          weather: new Map<string, WeatherData>(),
+          trips: new Map(),
+          weather: new Map(),
           lastSync: new Date()
         }
       }
-
-      const jsonData = await fs.readFile(this.dataFile, 'utf-8')
-      const serialized: SerializedStore = JSON.parse(jsonData)
-      
-      return this.deserializeStore(serialized)
     } catch (error) {
-      if (error instanceof SyntaxError) {
-        throw new Error(`Data file is corrupted: ${error.message}`)
+      console.error('Failed to load data from localStorage:', error)
+      return {
+        trips: new Map(),
+        weather: new Map(),
+        lastSync: new Date()
       }
-      throw new Error(`Failed to load data: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
   }
 
   async backup(): Promise<string> {
     try {
-      await this.ensureDirectories()
-      
-      const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
-      const backupFile = path.join(this.backupDir, `backup-${timestamp}.json`)
-      
-      const fileExists = await fs.access(this.dataFile).then(() => true).catch(() => false)
-      
-      if (!fileExists) {
-        throw new Error('No data file exists to backup')
+      if (typeof window !== 'undefined' && window.localStorage) {
+        const data = window.localStorage.getItem(this.storageKey)
+        if (data) {
+          const backupId = `backup_${new Date().toISOString()}`
+          window.localStorage.setItem(`${this.backupKey}_${backupId}`, data)
+          console.log('Backup created:', backupId)
+          return backupId
+        }
       }
-      
-      const data = await fs.readFile(this.dataFile, 'utf-8')
-      await fs.writeFile(backupFile, data, 'utf-8')
-      
-      return backupFile
+      throw new Error('No data to backup')
     } catch (error) {
       throw new Error(`Failed to create backup: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
   }
 
-  async restore(backupPath: string): Promise<void> {
+  async restore(backup: string): Promise<void> {
     try {
-      await this.ensureDirectories()
-      
-      const backupExists = await fs.access(backupPath).then(() => true).catch(() => false)
-      
-      if (!backupExists) {
-        throw new Error(`Backup file does not exist: ${backupPath}`)
-      }
-      
-      const backupData = await fs.readFile(backupPath, 'utf-8')
-      
-      JSON.parse(backupData)
-      
-      await fs.writeFile(this.dataFile, backupData, 'utf-8')
-    } catch (error) {
-      if (error instanceof SyntaxError) {
-        throw new Error(`Backup file is corrupted: ${error.message}`)
-      }
-      throw new Error(`Failed to restore backup: ${error instanceof Error ? error.message : 'Unknown error'}`)
-    }
-  }
-
-  async cleanupOldBackups(maxBackups: number = 10): Promise<void> {
-    try {
-      await this.ensureDirectories()
-      
-      const files = await fs.readdir(this.backupDir)
-      const backupFiles = files
-        .filter(file => file.startsWith('backup-') && file.endsWith('.json'))
-        .map(file => ({
-          name: file,
-          path: path.join(this.backupDir, file)
-        }))
-        .sort((a, b) => b.name.localeCompare(a.name))
-      
-      if (backupFiles.length > maxBackups) {
-        const filesToDelete = backupFiles.slice(maxBackups)
-        
-        for (const file of filesToDelete) {
-          await fs.unlink(file.path)
+      if (typeof window !== 'undefined' && window.localStorage) {
+        const backupData = window.localStorage.getItem(`${this.backupKey}_${backup}`)
+        if (backupData) {
+          window.localStorage.setItem(this.storageKey, backupData)
+          console.log('Data restored from backup:', backup)
+          return
         }
       }
+      throw new Error('Backup not found')
     } catch (error) {
-      console.warn(`Failed to cleanup old backups: ${error instanceof Error ? error.message : 'Unknown error'}`)
+      throw new Error(`Failed to restore backup: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
   }
 }
 
-export const persistenceService = new FilePersistenceService()
+// Create and export the singleton instance
+export const persistenceService = new BrowserPersistenceService()

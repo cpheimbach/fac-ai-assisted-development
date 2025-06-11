@@ -26,29 +26,52 @@ export function useTrips(): UseTripsReturn {
   })
 
   const updateLoadingState = useCallback((isLoading: boolean, error: string | null = null) => {
+    console.log('useTrips: Updating loading state:', { isLoading, error })
     setLoading({ isLoading, error })
   }, [])
 
   const refreshTrips = useCallback(async () => {
     try {
+      console.log('useTrips: Starting refreshTrips, setting loading=true')
       updateLoadingState(true)
-      const allTrips = await tripService.getAllTrips()
-      setTrips(allTrips)
+      
+      // Add timeout to prevent infinite loading
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Operation timed out')), 10000)
+      )
+      
+      const tripsPromise = tripService.getAllTrips()
+      const allTrips = await Promise.race([tripsPromise, timeoutPromise])
+      
+      console.log('useTrips: Successfully loaded trips:', allTrips.length)
+      setTrips(allTrips as any)
       updateLoadingState(false)
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to load trips'
+      console.error('useTrips: Error in refreshTrips:', errorMessage)
       updateLoadingState(false, errorMessage)
     }
   }, [updateLoadingState])
 
   const createTrip = useCallback(async (data: CreateTripData) => {
     try {
+      console.log('useTrips: Starting createTrip, setting loading=true')
       updateLoadingState(true)
-      const newTrip = await tripService.createTrip(data)
-      setTrips(currentTrips => [...currentTrips, newTrip])
+      
+      // Add timeout to prevent infinite loading
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Create operation timed out')), 10000)
+      )
+      
+      const createPromise = tripService.createTrip(data)
+      const newTrip = await Promise.race([createPromise, timeoutPromise])
+      
+      console.log('useTrips: Successfully created trip:', newTrip)
+      setTrips(currentTrips => [...currentTrips, newTrip as any])
       updateLoadingState(false)
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to create trip'
+      console.error('useTrips: Error in createTrip:', errorMessage)
       updateLoadingState(false, errorMessage)
       throw error
     }
@@ -128,6 +151,12 @@ export function useTrips(): UseTripsReturn {
 
   useEffect(() => {
     refreshTrips()
+    
+    // Cleanup function to reset loading state on unmount
+    return () => {
+      console.log('useTrips: Component unmounting, resetting loading state')
+      setLoading({ isLoading: false, error: null })
+    }
   }, [refreshTrips])
 
   return {

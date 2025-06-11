@@ -60,7 +60,7 @@ class GlobalErrorHandler {
     })
 
     // In production, you might want to send errors to an external service
-    if (process.env.NODE_ENV === 'production') {
+    if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
       this.reportToExternalService(errorEntry)
     }
   }

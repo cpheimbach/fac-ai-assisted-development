@@ -15,7 +15,8 @@ export function TripDashboard() {
     loading: tripsLoading, 
     createTrip, 
     updateTrip, 
-    deleteTrip 
+    deleteTrip,
+    refreshTrips 
   } = useTrips()
   
   const { 
@@ -107,11 +108,14 @@ export function TripDashboard() {
         <div className={styles.headerActions}>
           {!showForm && (
             <button 
-              onClick={() => setShowCreateForm(true)}
+              onClick={() => {
+                console.log('Create New Trip button clicked')
+                setShowCreateForm(true)
+              }}
               className={styles.primaryButton}
-              disabled={tripsLoading.isLoading}
+              disabled={tripsLoading.isLoading && !tripsLoading.error}
             >
-              Create New Trip
+              {tripsLoading.isLoading ? 'Loading...' : 'Create New Trip'}
             </button>
           )}
         </div>
@@ -120,6 +124,16 @@ export function TripDashboard() {
       {tripsLoading.error && (
         <div className={styles.error} role="alert">
           <p>Error loading trips: {tripsLoading.error}</p>
+          <button 
+            onClick={() => {
+              console.log('TripDashboard: Retry button clicked')
+              refreshTrips()
+            }}
+            className={styles.secondaryButton}
+            style={{ marginTop: '1rem' }}
+          >
+            Retry Loading
+          </button>
         </div>
       )}
 
