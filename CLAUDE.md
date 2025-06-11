@@ -24,10 +24,10 @@ A travel planning web application focused on trip management with integrated wea
 - Group imports: React/external → internal → relative imports
 - Use absolute imports from `src/` root for cross-domain references
 - Keep imports organized alphabetically within groups
+- **React 18+ JSX Transform**: No need to import React for JSX components
 
 ```typescript
-// External
-import React from 'react'
+// External (only when needed)
 import { useNavigate } from '@remix-run/react'
 
 // Internal
@@ -57,6 +57,10 @@ import './TripCard.module.css'
 - **Service layer patterns**: Class-based services with singleton exports for business logic
 - **Validation patterns**: Separate validation functions with sanitization and error arrays
 - **Type safety hygiene**: Use strongest available types, avoid `any`/`unknown` where domain types exist
+- **Component composition**: Props interfaces for external behavior (onEdit, onDelete, isLoading)
+- **Smart sorting**: Logical data ordering (current → upcoming → past trips)
+- **Form validation**: Field-level validation with immediate error feedback
+- **Optimistic updates**: Immediate UI feedback with error rollback patterns
 
 ## Development Workflow
 
