@@ -4,15 +4,16 @@
  */
 
 import { weatherService } from '../services/weatherService'
+import { WeatherData } from '../types/weather'
 
 interface MockUseWeatherReturn {
-  weatherData: any
+  weatherData: WeatherData | null
   isLoading: boolean
   error: string | null
-  getWeatherForLocation: (location: string) => Promise<any>
-  getWeatherForTrip: (destination: string, startDate: Date, endDate: Date) => Promise<any>
+  getWeatherForLocation: (location: string) => Promise<WeatherData>
+  getWeatherForTrip: (destination: string, startDate: Date, endDate: Date) => Promise<WeatherData>
   hasCachedWeather: (location: string) => boolean
-  getCachedWeather: (location: string) => any
+  getCachedWeather: (location: string) => WeatherData | null
   clearError: () => void
   getCacheStats: () => { size: number; locations: string[] }
   clearCache: () => void
@@ -20,10 +21,10 @@ interface MockUseWeatherReturn {
 
 // Mock implementation of useWeather for testing (since we can't use React hooks in Node.js)
 function createMockUseWeather(): MockUseWeatherReturn {
-  let state = {
-    weatherData: null,
+  const state = {
+    weatherData: null as WeatherData | null,
     isLoading: false,
-    error: null
+    error: null as string | null
   }
 
   return {
