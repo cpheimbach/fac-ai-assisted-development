@@ -1,80 +1,108 @@
 **IMPORTANT FOR CLAUDE: Reference this file before implementing anything**
 
-# Project: [Project Name]
+# Project: Travel Planning App
 
 ## Project Overview
 
-A brief description of the project, its purpose, and key goals.
+A travel planning web application focused on trip management with integrated weather checking functionality. Built as a demo project for AI-assisted development workshop using TypeScript, React Router v7, and modern web technologies. Prioritizes working demonstration over perfect architecture.
 
 ## Tech Stack
 
-- Languages: [list primary languages]
-- Frameworks: [list frameworks]
-- Tools: [list tools]
+- Languages: TypeScript (strict mode enabled)
+- Frontend: React 18+ with React Router v7
+- Backend: React Router v7 server functions (Node.js)
+- Styling: CSS Modules
+- Package Manager: pnpm
+- Database: In-memory store with file persistence
+- External APIs: Weather service integration
 
 ## Code Style & Conventions
 
 ### Import/Module Standards
 
-- [Specify import standards]
+- Use ES6 imports exclusively
+- Group imports: React/external → internal → relative imports
+- Use absolute imports from `src/` root for cross-domain references
+- Keep imports organized alphabetically within groups
+
+```typescript
+// External
+import React from 'react';
+import { useNavigate } from '@remix-run/react';
+
+// Internal
+import { Trip } from '~/domains/trip-management/types/trip';
+import { WeatherService } from '~/domains/weather/services/weatherService';
+
+// Relative
+import './TripCard.module.css';
+```
 
 ### Naming Conventions
 
-- [Functions naming convention]
-- [Classes/Components naming convention]
-- [Constants naming convention]
-- [Files naming convention]
+- **Components**: PascalCase (`TripCard`, `WeatherWidget`)
+- **Functions/Variables**: camelCase (`createTrip`, `weatherData`)
+- **Types/Interfaces**: PascalCase (`Trip`, `WeatherData`)
+- **Files**: Match export names (`TripCard.tsx`, `weatherService.ts`)
+- **CSS Classes**: camelCase in modules (`tripCard`, `weatherWidget`)
+- **Constants**: camelCase (avoid SCREAMING_SNAKE_CASE for simplicity)
 
 ### Patterns to Follow
 
-- [Key architectural patterns]
-- [Error handling approaches]
-- [Code organisation principles]
+- **Domain-driven structure**: Flat domains with related functionality grouped
+- **Functional components**: Use custom hooks for logic extraction
+- **Direct CRUD operations**: No abstraction layers for demo simplicity
+- **Try-catch error handling**: Standard JavaScript patterns with React error boundaries
+- **CSS Modules**: Scoped styling without CSS-in-JS complexity
 
 ## Development Workflow
 
-- Branch strategy
-- Commit message format
-- PR requirements
+- Branch strategy: Feature branches off main
+- Commit message format: Conventional commits (`feat:`, `fix:`, `docs:`, `refactor:`)
+- PR requirements: Working demo functionality, basic tests passing
 
 ## Testing Strategy
 
-- Test frameworks
-- Coverage requirements
-- Test naming conventions
+- Test framework: Jest with React Testing Library
+- Coverage requirements: Basic unit tests for core CRUD operations
+- Test naming: `describe('ComponentName')` and `test('should do something')`
+- Focus: Test business logic and user interactions, not implementation details
 
 ## Environment Setup
 
-- Required environment variables
-- Setup commands
-- Local development server
+- Node.js 18+ required
+- pnpm package manager
+- No environment variables required for basic demo
+- Local file-based data storage
 
 ## Common Commands
 
 ```bash
 # Build command
-[command]
+pnpm build
 
 # Test command
-[command]
+pnpm test
 
 # Lint command
-[command]
+pnpm lint
 
-# Check command
-[command]
+# Type check command
+pnpm tsc
 
 # Development server
-[command]
+pnpm dev
 ```
 
 ## Project Structure
 
 Key directories and their purpose:
 
-- `/src` - [description]
-- `/tests` - [description]
-- [other important directories]
+- `/src/domains` - Domain-driven flat structure (trip-management, weather, shared)
+- `/src/data` - In-memory store and persistence logic
+- `/src/styles` - Global CSS and component-specific modules
+- `/src/app` - React Router v7 application root and routing
+- `/docs` - Generated documentation and specifications
 
 ## Review Process Guidelines
 
@@ -87,12 +115,12 @@ Before submitting any code, ensure the following steps are completed:
 3. **Assess compliance**:
    For each standard, explicitly state ✅ or ❌ and explain why:
 
-   - Code style and formatting
-   - Naming conventions
+   - Code style and formatting (ESLint + Prettier)
+   - Naming conventions (simple consistent approach)
    - Architecture patterns (refer to `ARCHITECTURE.md`)
-   - Error handling
-   - Test coverage
-   - Documentation
+   - Error handling (try-catch with boundaries)
+   - Test coverage (basic unit tests)
+   - Documentation (comprehensive docs)
 
 4. **Self-review checklist**:
    - [ ] Code follows defined patterns
@@ -100,11 +128,27 @@ Before submitting any code, ensure the following steps are completed:
    - [ ] Error handling implemented
    - [ ] Tests written and passing
    - [ ] Documentation updated
+   - [ ] Demo functionality works end-to-end
+
+## Development Principles
+
+**Demo-focused development**: Working > perfect, clear examples, easy to understand and modify quickly
+
+- Prioritize functionality over optimization
+- Clear, readable code over clever solutions
+- Comprehensive documentation for learning value
+- Maintain professional quality suitable for presentation
 
 ## Known Issues & Workarounds
 
-Document any current limitations or workarounds Claude should be aware of.
+- Weather API rate limiting: Implement client-side caching (30-minute TTL)
+- File persistence: No concurrent access handling in demo version
+- Type safety: Strict TypeScript may require more setup time but improves reliability
 
 ## References
 
-Links to relevant external documentation, design docs, or resources.
+- [React Router v7 Documentation](https://reactrouter.com/en/main)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+- [CSS Modules Documentation](https://github.com/css-modules/css-modules)
+- [Conventional Commits](https://www.conventionalcommits.org/)
+- Workshop specifications: `FUNCTIONAL.md`, `ARCHITECTURE.md`
