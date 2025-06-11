@@ -61,6 +61,8 @@ import './TripCard.module.css'
 - **Smart sorting**: Logical data ordering (current → upcoming → past trips)
 - **Form validation**: Field-level validation with immediate error feedback
 - **Optimistic updates**: Immediate UI feedback with error rollback patterns
+- **Route integration**: Early integration for component testing, proper TypeScript handler patterns
+- **State management**: Form toggle logic, edit state patterns, conditional rendering
 
 ## Development Workflow
 
