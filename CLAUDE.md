@@ -56,6 +56,7 @@ import './TripCard.module.css'
 - **CSS Modules**: Scoped styling without CSS-in-JS complexity
 - **Service layer patterns**: Class-based services with singleton exports for business logic
 - **Validation patterns**: Separate validation functions with sanitization and error arrays
+- **Type safety hygiene**: Use strongest available types, avoid `any`/`unknown` where domain types exist
 
 ## Development Workflow
 
