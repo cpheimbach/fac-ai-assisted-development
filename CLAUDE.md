@@ -63,6 +63,8 @@ import './TripCard.module.css'
 - **Optimistic updates**: Immediate UI feedback with error rollback patterns
 - **Route integration**: Early integration for component testing, proper TypeScript handler patterns
 - **State management**: Form toggle logic, edit state patterns, conditional rendering
+- **API integration**: Mock-first approach for reliable demos, rate limiting, comprehensive error handling
+- **Caching patterns**: TTL-based caching (30-minute for weather), automatic cleanup, fallback strategies
 
 ## Development Workflow
 
