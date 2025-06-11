@@ -1,0 +1,146 @@
+/* CSS Module for Index Page */
+
+.container {
+  display: flex;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rem;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.25rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  line-height: 1.2;
+}
+
+@media (prefers-color-scheme: dark) {
+  .title {
+    color: #f9fafb;
+  }
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.logoContainer {
+  height: 144px;
+  width: 434px;
+}
+
+.logoLight {
+  display: block;
+  width: 100%;
+}
+
+.logoDark {
+  display: none;
+  width: 100%;
+}
+
+@media (prefers-color-scheme: dark) {
+  .logoLight {
+    display: none;
+  }
+  
+  .logoDark {
+    display: block;
+  }
+}
+
+.navigation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  border-radius: 1.5rem;
+  border: 1px solid #e5e7eb;
+  padding: 1.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .navigation {
+    border-color: #374151;
+  }
+}
+
+.navigationText {
+  line-height: 1.5;
+  color: #374151;
+}
+
+@media (prefers-color-scheme: dark) {
+  .navigationText {
+    color: #e5e7eb;
+  }
+}
+
+.resourcesList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.resourceItem {
+  /* Base styling for list items */
+}
+
+.resourceLink {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  align-self: stretch;
+  padding: 0.75rem;
+  line-height: 1.5;
+  color: #1d4ed8;
+  transition: text-decoration 0.15s ease-in-out;
+}
+
+.resourceLink:hover {
+  text-decoration: underline;
+}
+
+@media (prefers-color-scheme: dark) {
+  .resourceLink {
+    color: #3b82f6;
+  }
+}
+
+.resourceIcon {
+  stroke: #4b5563;
+  transition: stroke 0.15s ease-in-out;
+}
+
+.resourceLink:hover .resourceIcon {
+  stroke: currentColor;
+}
+
+@media (prefers-color-scheme: dark) {
+  .resourceIcon {
+    stroke: #9ca3af;
+  }
+}
