@@ -67,6 +67,7 @@ import './TripCard.module.css'
 - **Caching patterns**: TTL-based caching (30-minute for weather), automatic cleanup, fallback strategies
 - **Dashboard integration**: Unified interface with consolidated state management, weather selection patterns, professional responsive styling
 - **Error handling patterns**: Multi-layer error boundaries, SSR-safe global error handlers, custom error types, structured logging
+- **CSS Modules patterns**: CSS custom properties for theming, mobile-first responsive design, status-based styling, loading animations, scoped component styling
 
 ## Development Workflow
 

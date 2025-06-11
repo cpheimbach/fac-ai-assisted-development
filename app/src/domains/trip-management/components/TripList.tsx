@@ -1,6 +1,7 @@
 
 import { Trip } from '../types/trip'
 import { TripCard } from './TripCard'
+import styles from './TripList.module.css'
 
 interface TripListProps {
   trips: Trip[]
@@ -20,7 +21,7 @@ export function TripList({
   
   if (trips.length === 0) {
     return (
-      <div>
+      <div className={styles.emptyState}>
         <p>{emptyMessage}</p>
       </div>
     )
@@ -68,11 +69,14 @@ export function TripList({
   })
 
   return (
-    <div>
+    <div className={`${styles.tripList} ${isLoading ? styles.loading : ''}`}>
       {currentTrips.length > 0 && (
-        <section>
-          <h2>Current Trips</h2>
-          <div>
+        <section className={`${styles.section} ${styles.currentSection}`}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>Current Trips</h2>
+            <span className={styles.sectionBadge}>{currentTrips.length}</span>
+          </div>
+          <div className={styles.tripsGrid}>
             {currentTrips.map(trip => (
               <TripCard
                 key={trip.id}
@@ -87,9 +91,12 @@ export function TripList({
       )}
 
       {upcomingTrips.length > 0 && (
-        <section>
-          <h2>Upcoming Trips</h2>
-          <div>
+        <section className={`${styles.section} ${styles.upcomingSection}`}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>Upcoming Trips</h2>
+            <span className={styles.sectionBadge}>{upcomingTrips.length}</span>
+          </div>
+          <div className={styles.tripsGrid}>
             {upcomingTrips.map(trip => (
               <TripCard
                 key={trip.id}
@@ -104,9 +111,12 @@ export function TripList({
       )}
 
       {pastTrips.length > 0 && (
-        <section>
-          <h2>Past Trips</h2>
-          <div>
+        <section className={`${styles.section} ${styles.pastSection}`}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>Past Trips</h2>
+            <span className={styles.sectionBadge}>{pastTrips.length}</span>
+          </div>
+          <div className={styles.tripsGrid}>
             {pastTrips.map(trip => (
               <TripCard
                 key={trip.id}
@@ -118,6 +128,12 @@ export function TripList({
             ))}
           </div>
         </section>
+      )}
+
+      {isLoading && (
+        <div className={styles.loadingOverlay}>
+          <div className={styles.loadingSpinner} />
+        </div>
       )}
     </div>
   )

@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react'
 
 import { CreateTripData, Trip, UpdateTripData } from '../types/trip'
+import styles from './TripForm.module.css'
 
 interface TripFormProps {
   trip?: Trip
@@ -111,18 +112,20 @@ export function TripForm({ trip, onSubmit, onCancel, isLoading = false }: TripFo
   const isEditing = Boolean(trip)
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>{isEditing ? 'Edit Trip' : 'Create New Trip'}</h2>
+    <form onSubmit={handleSubmit} className={styles.tripForm}>
+      <div className={styles.header}>
+        <h2 className={styles.title}>{isEditing ? 'Edit Trip' : 'Create New Trip'}</h2>
+      </div>
       
       {errors.general && (
-        <div role="alert">
+        <div role="alert" className={styles.generalError}>
           {errors.general}
         </div>
       )}
 
-      <div>
-        <label htmlFor="trip-name">
-          Trip Name *
+      <div className={styles.fieldGroup}>
+        <label htmlFor="trip-name" className={styles.label}>
+          Trip Name <span className={styles.required}>*</span>
         </label>
         <input
           id="trip-name"
@@ -132,17 +135,18 @@ export function TripForm({ trip, onSubmit, onCancel, isLoading = false }: TripFo
           disabled={isLoading}
           maxLength={100}
           required
+          className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
         />
         {errors.name && (
-          <div role="alert">
+          <div role="alert" className={styles.fieldError}>
             {errors.name}
           </div>
         )}
       </div>
 
-      <div>
-        <label htmlFor="trip-destination">
-          Destination *
+      <div className={styles.fieldGroup}>
+        <label htmlFor="trip-destination" className={styles.label}>
+          Destination <span className={styles.required}>*</span>
         </label>
         <input
           id="trip-destination"
@@ -152,59 +156,74 @@ export function TripForm({ trip, onSubmit, onCancel, isLoading = false }: TripFo
           disabled={isLoading}
           maxLength={200}
           required
+          className={`${styles.input} ${errors.destination ? styles.inputError : ''}`}
         />
         {errors.destination && (
-          <div role="alert">
+          <div role="alert" className={styles.fieldError}>
             {errors.destination}
           </div>
         )}
       </div>
 
-      <div>
-        <label htmlFor="trip-start-date">
-          Start Date *
-        </label>
-        <input
-          id="trip-start-date"
-          type="date"
-          value={formData.startDate}
-          onChange={handleInputChange('startDate')}
-          disabled={isLoading}
-          required
-        />
-        {errors.startDate && (
-          <div role="alert">
-            {errors.startDate}
-          </div>
-        )}
+      <div className={styles.dateFields}>
+        <div className={styles.fieldGroup}>
+          <label htmlFor="trip-start-date" className={styles.label}>
+            Start Date <span className={styles.required}>*</span>
+          </label>
+          <input
+            id="trip-start-date"
+            type="date"
+            value={formData.startDate}
+            onChange={handleInputChange('startDate')}
+            disabled={isLoading}
+            required
+            className={`${styles.input} ${errors.startDate ? styles.inputError : ''}`}
+          />
+          {errors.startDate && (
+            <div role="alert" className={styles.fieldError}>
+              {errors.startDate}
+            </div>
+          )}
+        </div>
+
+        <div className={styles.fieldGroup}>
+          <label htmlFor="trip-end-date" className={styles.label}>
+            End Date <span className={styles.required}>*</span>
+          </label>
+          <input
+            id="trip-end-date"
+            type="date"
+            value={formData.endDate}
+            onChange={handleInputChange('endDate')}
+            disabled={isLoading}
+            required
+            className={`${styles.input} ${errors.endDate ? styles.inputError : ''}`}
+          />
+          {errors.endDate && (
+            <div role="alert" className={styles.fieldError}>
+              {errors.endDate}
+            </div>
+          )}
+        </div>
       </div>
 
-      <div>
-        <label htmlFor="trip-end-date">
-          End Date *
-        </label>
-        <input
-          id="trip-end-date"
-          type="date"
-          value={formData.endDate}
-          onChange={handleInputChange('endDate')}
+      <div className={styles.actions}>
+        <button 
+          type="submit" 
           disabled={isLoading}
-          required
-        />
-        {errors.endDate && (
-          <div role="alert">
-            {errors.endDate}
-          </div>
-        )}
-      </div>
-
-      <div>
-        <button type="submit" disabled={isLoading}>
+          className={`${styles.submitButton} ${isLoading ? styles.loading : ''}`}
+        >
+          {isLoading && <div className={styles.loadingSpinner} />}
           {isLoading ? 'Saving...' : (isEditing ? 'Update Trip' : 'Create Trip')}
         </button>
         
         {onCancel && (
-          <button type="button" onClick={onCancel} disabled={isLoading}>
+          <button 
+            type="button" 
+            onClick={onCancel} 
+            disabled={isLoading}
+            className={styles.cancelButton}
+          >
             Cancel
           </button>
         )}

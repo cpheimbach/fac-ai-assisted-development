@@ -1,6 +1,7 @@
 
 import { formatDate, formatDateRange, calculateTripDuration, getDaysUntilTrip } from '../../shared/utils'
 import { Trip } from '../types/trip'
+import styles from './TripCard.module.css'
 
 interface TripCardProps {
   trip: Trip
@@ -62,46 +63,54 @@ export function TripCard({ trip, onEdit, onDelete, isLoading = false }: TripCard
   }
 
   return (
-    <article>
-      <header>
-        <h3>{trip.name}</h3>
-        <div className={getStatusClass()}>
+    <article className={`${styles.tripCard} ${isLoading ? styles.loading : ''}`}>
+      <header className={styles.header}>
+        <h3 className={styles.title}>{trip.name}</h3>
+        <div className={`${styles.status} ${styles[getStatusClass()]}`}>
           {getTripStatus()}
         </div>
       </header>
 
-      <div>
-        <div>
-          <strong>Destination:</strong> {trip.destination}
+      <div className={styles.content}>
+        <div className={styles.detail}>
+          <span className={styles.detailLabel}>Destination:</span>
+          <span className={`${styles.detailValue} ${styles.destination}`}>{trip.destination}</span>
         </div>
         
-        <div>
-          <strong>Dates:</strong> {dateRange}
+        <div className={styles.detail}>
+          <span className={styles.detailLabel}>Dates:</span>
+          <span className={`${styles.detailValue} ${styles.dateRange}`}>{dateRange}</span>
         </div>
         
-        <div>
-          <strong>Duration:</strong> {duration} {duration === 1 ? 'day' : 'days'}
+        <div className={styles.detail}>
+          <span className={styles.detailLabel}>Duration:</span>
+          <span className={`${styles.detailValue} ${styles.duration}`}>
+            {duration} {duration === 1 ? 'day' : 'days'}
+          </span>
         </div>
         
-        <div>
-          <strong>Created:</strong> {formatDate(trip.createdAt)}
+        <div className={`${styles.detail} ${styles.timestamps}`}>
+          <span className={styles.detailLabel}>Created:</span>
+          <span className={styles.detailValue}>{formatDate(trip.createdAt)}</span>
         </div>
         
         {trip.updatedAt.getTime() !== trip.createdAt.getTime() && (
-          <div>
-            <strong>Last updated:</strong> {formatDate(trip.updatedAt)}
+          <div className={`${styles.detail} ${styles.timestamps}`}>
+            <span className={styles.detailLabel}>Updated:</span>
+            <span className={styles.detailValue}>{formatDate(trip.updatedAt)}</span>
           </div>
         )}
       </div>
 
       {(onEdit || onDelete) && (
-        <footer>
+        <footer className={styles.actions}>
           {onEdit && (
             <button
               type="button"
               onClick={handleEdit}
               disabled={isLoading}
               aria-label={`Edit ${trip.name}`}
+              className={styles.editButton}
             >
               Edit
             </button>
@@ -113,6 +122,7 @@ export function TripCard({ trip, onEdit, onDelete, isLoading = false }: TripCard
               onClick={handleDelete}
               disabled={isLoading}
               aria-label={`Delete ${trip.name}`}
+              className={styles.deleteButton}
             >
               Delete
             </button>
