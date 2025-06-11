@@ -1,0 +1,160 @@
+.errorBoundary {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: #fafafa;
+}
+
+.errorFallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: #fafafa;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.errorContainer {
+  max-width: 600px;
+  text-align: center;
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+}
+
+.errorIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.errorTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #dc2626;
+  margin: 0 0 1rem 0;
+}
+
+.errorMessage {
+  color: #6b7280;
+  margin: 0 0 1.5rem 0;
+  line-height: 1.6;
+}
+
+.errorDetails {
+  text-align: left;
+  margin: 1.5rem 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background-color: #f9fafb;
+}
+
+.errorSummary {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  font-weight: 500;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
+  background-color: #f3f4f6;
+}
+
+.errorSummary:hover {
+  background-color: #e5e7eb;
+}
+
+.errorStack {
+  padding: 1rem;
+  font-family: 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #374151;
+  overflow-x: auto;
+}
+
+.errorStack pre {
+  margin: 0.5rem 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background-color: #fff;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #e5e7eb;
+}
+
+.errorActions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.retryButton,
+.reloadButton {
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  font-size: 0.875rem;
+}
+
+.retryButton {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.retryButton:hover {
+  background-color: #2563eb;
+}
+
+.retryButton:active {
+  transform: translateY(1px);
+}
+
+.reloadButton {
+  background-color: #6b7280;
+  color: white;
+}
+
+.reloadButton:hover {
+  background-color: #4b5563;
+}
+
+.reloadButton:active {
+  transform: translateY(1px);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 640px) {
+  .errorBoundary,
+  .errorFallback {
+    padding: 1rem;
+  }
+  
+  .errorContainer {
+    padding: 1.5rem;
+  }
+  
+  .errorIcon {
+    font-size: 2.5rem;
+  }
+  
+  .errorTitle {
+    font-size: 1.25rem;
+  }
+  
+  .errorActions {
+    flex-direction: column;
+  }
+  
+  .retryButton,
+  .reloadButton {
+    width: 100%;
+  }
+}

@@ -66,6 +66,7 @@ import './TripCard.module.css'
 - **API integration**: Mock-first approach for reliable demos, rate limiting, comprehensive error handling
 - **Caching patterns**: TTL-based caching (30-minute for weather), automatic cleanup, fallback strategies
 - **Dashboard integration**: Unified interface with consolidated state management, weather selection patterns, professional responsive styling
+- **Error handling patterns**: Multi-layer error boundaries, SSR-safe global error handlers, custom error types, structured logging
 
 ## Development Workflow
 
@@ -160,6 +161,7 @@ Before submitting any code, ensure the following steps are completed:
 - Weather API rate limiting: Implement client-side caching (30-minute TTL)
 - File persistence: No concurrent access handling in demo version
 - Type safety: Strict TypeScript may require more setup time but improves reliability
+- SSR compatibility: Always check `typeof window !== 'undefined'` before accessing browser APIs
 
 ## References
 

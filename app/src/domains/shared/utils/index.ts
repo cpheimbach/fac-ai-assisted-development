@@ -103,3 +103,17 @@ export function getDaysUntilTrip(startDate: Date): number {
   const diffTime = tripStart.getTime() - today.getTime()
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 }
+
+// Re-export error handling utilities
+export {
+  globalErrorHandler,
+  logError,
+  getErrorSummary,
+  clearErrorLog,
+  TripServiceError,
+  WeatherServiceError,
+  ValidationError,
+  NetworkError,
+  formatErrorMessage,
+  isRetryableError
+} from './errorHandler'
