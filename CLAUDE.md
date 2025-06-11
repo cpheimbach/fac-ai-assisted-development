@@ -69,6 +69,7 @@ import './TripCard.module.css'
 - Branch strategy: Feature branches off main
 - Commit message format: Conventional commits (`feat:`, `fix:`, `docs:`, `refactor:`)
 - PR requirements: Working demo functionality, basic tests passing
+- **Task completion protocol**: At the end of each completed task, always commit and push all changes to ensure clean working directory and sync with remote origin
 
 ## Testing Strategy
 
