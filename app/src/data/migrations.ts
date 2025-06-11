@@ -1,11 +1,14 @@
 import { AppStore } from './store'
 import { persistenceService } from './persistence'
+import { Trip } from '../domains/trip-management/types/trip'
+import { WeatherData } from '../domains/weather/types/weather'
 
 interface MigrationData {
-  trips?: unknown[] | Map<string, unknown>
-  weather?: unknown[] | Map<string, unknown>
+  trips?: Trip[] | Map<string, Trip>
+  weather?: WeatherData[] | Map<string, WeatherData>
   lastSync?: string | Date
   _migrationState?: MigrationState
+  // Allow additional properties for backward compatibility during migrations
   [key: string]: unknown
 }
 
