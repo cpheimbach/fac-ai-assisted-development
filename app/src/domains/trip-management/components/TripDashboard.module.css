@@ -1,165 +1,298 @@
 .dashboard {
   min-height: 100vh;
-  background-color: #f8fafc;
+  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-tertiary) 100%);
+  position: relative;
+}
+
+.dashboard::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 50%, var(--color-primary-light) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, var(--color-primary-light) 0%, transparent 50%);
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .header {
-  background-color: white;
-  border-bottom: 1px solid #e2e8f0;
-  padding: 1.5rem 2rem;
+  background: var(--color-bg-primary);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--spacing-xl) var(--spacing-xl);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
 }
 
 .header h1 {
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: 700;
-  color: #1a202c;
+  color: var(--color-text-primary);
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.header h1::before {
+  content: '✈️';
+  font-size: 2rem;
 }
 
 .headerActions {
   display: flex;
-  gap: 1rem;
+  gap: var(--spacing-md);
+  align-items: center;
 }
 
 .main {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: var(--spacing-2xl);
+  position: relative;
+  z-index: 1;
 }
 
 .content {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: var(--spacing-2xl);
 }
 
 .formSection {
-  background-color: white;
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-2xl);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--color-border);
+  position: relative;
+  overflow: hidden;
+}
+
+.formSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-success));
 }
 
 .tripsSection {
-  background-color: white;
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-2xl);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--color-border);
+  position: relative;
+  overflow: hidden;
+}
+
+.tripsSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-warning));
 }
 
 .sectionHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: var(--spacing-xl);
+  padding-bottom: var(--spacing-lg);
+  border-bottom: 2px solid var(--color-border);
+  position: relative;
+}
+
+.sectionHeader::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background: var(--color-primary);
 }
 
 .sectionHeader h2 {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 600;
-  color: #2d3748;
+  color: var(--color-text-primary);
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.sectionHeader h2::before {
+  content: '🗂️';
+  font-size: 1.5rem;
 }
 
 .tripActions {
   display: flex;
-  gap: 0.75rem;
+  gap: var(--spacing-md);
+  align-items: center;
 }
 
 .weatherSection {
-  margin-top: 2rem;
-  padding-top: 2rem;
-  border-top: 1px solid #e2e8f0;
+  margin-top: var(--spacing-2xl);
+  padding-top: var(--spacing-2xl);
+  border-top: 2px solid var(--color-border);
+  position: relative;
+}
+
+.weatherSection::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 0;
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-success));
 }
 
 .weatherSection h3 {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 600;
-  color: #2d3748;
-  margin: 0 0 1rem 0;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-lg) 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.weatherSection h3::before {
+  content: '🌤️';
+  font-size: 1.25rem;
 }
 
 .weatherActions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-xl);
 }
 
 .weatherButton {
-  padding: 0.75rem 1rem;
-  border: 1px solid #cbd5e0;
-  border-radius: 8px;
-  background-color: white;
-  color: #4a5568;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-primary);
+  color: var(--color-text-secondary);
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.weatherButton::before {
+  content: '🌍';
+  font-size: 1.125rem;
 }
 
 .weatherButton:hover {
-  border-color: #3182ce;
-  color: #3182ce;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  background: var(--color-primary-light);
 }
 
 .weatherButton:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
   transform: none;
 }
 
 .weatherButtonActive {
-  background-color: #3182ce;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
   color: white;
-  border-color: #3182ce;
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-md);
+}
+
+.weatherButtonActive::before {
+  content: '🎯';
 }
 
 .weatherButtonActive:hover {
-  background-color: #2c5aa0;
-  border-color: #2c5aa0;
-  color: white;
+  background: linear-gradient(135deg, var(--color-primary-hover), var(--color-primary));
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
 }
 
 .weatherDisplay {
-  background-color: #f7fafc;
-  border-radius: 8px;
-  padding: 1.5rem;
-  border: 1px solid #e2e8f0;
+  background: linear-gradient(135deg, var(--color-bg-primary), var(--color-bg-secondary));
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-2xl);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.weatherDisplay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-success), var(--color-primary));
 }
 
 .weatherHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .weatherHeader h4 {
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   font-weight: 600;
-  color: #2d3748;
+  color: var(--color-text-primary);
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.weatherHeader h4::before {
+  content: '🌈';
+  font-size: 1.125rem;
 }
 
 .closeButton {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  color: #a0aec0;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  font-size: 1.25rem;
+  color: var(--color-text-muted);
   cursor: pointer;
-  padding: 0;
-  width: 2rem;
-  height: 2rem;
+  padding: var(--spacing-sm);
+  width: 2.5rem;
+  height: 2.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -168,128 +301,193 @@
 }
 
 .closeButton:hover {
-  background-color: #e2e8f0;
-  color: #4a5568;
+  background: var(--color-error-light);
+  color: var(--color-error);
+  border-color: var(--color-error);
+  transform: scale(1.1);
 }
 
 .primaryButton {
-  background-color: #3182ce;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
   color: white;
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  padding: var(--spacing-md) var(--spacing-xl);
+  border-radius: var(--radius-lg);
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.primaryButton::before {
+  content: '✨';
+  font-size: 1rem;
 }
 
 .primaryButton:hover {
-  background-color: #2c5aa0;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, var(--color-primary-hover), var(--color-primary));
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
 }
 
 .primaryButton:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
   transform: none;
 }
 
 .secondaryButton {
-  background-color: white;
-  color: #4a5568;
-  border: 1px solid #cbd5e0;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
+  background: var(--color-bg-primary);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .secondaryButton:hover {
-  border-color: #a0aec0;
-  background-color: #f7fafc;
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+  color: var(--color-primary);
 }
 
 .error {
-  background-color: #fed7d7;
-  color: #c53030;
-  padding: 1rem;
-  border-radius: 8px;
-  border: 1px solid #feb2b2;
-  margin-bottom: 1rem;
+  background: var(--color-error-light);
+  color: var(--color-error);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-error);
+  margin-bottom: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
 }
 
 .error p {
   margin: 0;
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.error p::before {
+  content: '⚠️';
+  font-size: 1.125rem;
 }
 
 /* Responsive design */
+@media (max-width: 1024px) {
+  .main {
+    max-width: 100%;
+    padding: var(--spacing-xl);
+  }
+  
+  .weatherActions {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+}
+
 @media (max-width: 768px) {
   .header {
-    padding: 1rem;
+    padding: var(--spacing-lg);
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--spacing-lg);
     align-items: stretch;
   }
 
   .header h1 {
-    font-size: 1.5rem;
+    font-size: 2rem;
     text-align: center;
+    justify-content: center;
   }
 
   .main {
-    padding: 1rem;
+    padding: var(--spacing-lg);
   }
 
   .formSection,
   .tripsSection {
-    padding: 1.5rem;
+    padding: var(--spacing-xl);
   }
 
   .sectionHeader {
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--spacing-md);
     align-items: stretch;
+    text-align: center;
+  }
+
+  .sectionHeader h2 {
+    justify-content: center;
   }
 
   .weatherActions {
-    gap: 0.5rem;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
   }
 
   .weatherButton {
-    padding: 0.5rem 0.75rem;
+    padding: var(--spacing-sm) var(--spacing-md);
     font-size: 0.875rem;
   }
 
   .weatherDisplay {
-    padding: 1rem;
+    padding: var(--spacing-lg);
   }
 }
 
 @media (max-width: 480px) {
   .header {
-    padding: 0.75rem;
+    padding: var(--spacing-md);
+  }
+
+  .header h1 {
+    font-size: 1.75rem;
   }
 
   .main {
-    padding: 0.75rem;
+    padding: var(--spacing-md);
+  }
+
+  .content {
+    gap: var(--spacing-xl);
   }
 
   .formSection,
   .tripsSection {
-    padding: 1rem;
+    padding: var(--spacing-lg);
   }
 
-  .weatherActions {
+  .sectionHeader {
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .sectionHeader h2 {
+    font-size: 1.5rem;
+  }
+
+  .weatherSection h3 {
+    font-size: 1.25rem;
+  }
+
+  .primaryButton {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .weatherDisplay {
+    padding: var(--spacing-md);
+  }
+
+  .weatherHeader {
     flex-direction: column;
-  }
-
-  .weatherButton {
+    gap: var(--spacing-sm);
     text-align: center;
   }
 }
