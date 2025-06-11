@@ -1,0 +1,174 @@
+.weatherWidget {
+  border: 1px solid #e0e7ff;
+  border-radius: 8px;
+  padding: 16px;
+  background: #f8fafc;
+  min-height: 120px;
+}
+
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #dc2626;
+}
+
+.error p {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+}
+
+.retryButton {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.retryButton:hover {
+  background: #b91c1c;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #6b7280;
+}
+
+.loading p {
+  margin: 8px 0 0 0;
+  font-size: 14px;
+}
+
+.loadingSpinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e5e7eb;
+  border-top: 2px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.noData {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #6b7280;
+}
+
+.noData p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.location {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.lastUpdated {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.currentWeather {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.temperature {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.tempValue {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.tempUnit {
+  font-size: 18px;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.weatherInfo {
+  flex: 1;
+}
+
+.description {
+  font-size: 14px;
+  font-weight: 500;
+  color: #4b5563;
+  margin-bottom: 8px;
+  text-transform: capitalize;
+}
+
+.details {
+  display: flex;
+  gap: 16px;
+}
+
+.detail {
+  display: flex;
+  gap: 4px;
+  font-size: 12px;
+}
+
+.detailLabel {
+  color: #6b7280;
+}
+
+.detailValue {
+  color: #1f2937;
+  font-weight: 500;
+}
+
+@media (max-width: 480px) {
+  .weatherWidget {
+    padding: 12px;
+  }
+  
+  .currentWeather {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .header {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .details {
+    flex-direction: column;
+    gap: 4px;
+  }
+}

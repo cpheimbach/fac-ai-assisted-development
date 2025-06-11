@@ -1,0 +1,104 @@
+.weatherError {
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 16px;
+  background: #fef2f2;
+}
+
+.errorContent {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.errorIcon {
+  font-size: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.errorText {
+  flex: 1;
+  min-width: 0;
+}
+
+.errorTitle {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #dc2626;
+}
+
+.errorMessage {
+  margin: 0 0 12px 0;
+  font-size: 13px;
+  color: #7f1d1d;
+  line-height: 1.4;
+}
+
+.errorActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.retryButton {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.retryButton:hover {
+  background: #b91c1c;
+}
+
+.retryButton:active {
+  background: #991b1b;
+}
+
+.dismissButton {
+  background: transparent;
+  color: #7f1d1d;
+  border: 1px solid #fca5a5;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.dismissButton:hover {
+  background: #fca5a5;
+  color: #7f1d1d;
+}
+
+.dismissButton:active {
+  background: #f87171;
+}
+
+@media (max-width: 480px) {
+  .weatherError {
+    padding: 12px;
+  }
+  
+  .errorContent {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .errorIcon {
+    align-self: center;
+    margin-top: 0;
+  }
+  
+  .errorActions {
+    justify-content: center;
+  }
+}
