@@ -11,6 +11,9 @@ import {
 export class TripService {
   async createTrip(data: CreateTripData): Promise<Trip> {
     try {
+      // Wait for store initialization
+      await appStore.waitForInitialization()
+      
       const validation = validateAndSanitizeCreateTripData(data)
       
       if (!validation.isValid) {
@@ -41,7 +44,11 @@ export class TripService {
 
   async getAllTrips(): Promise<Trip[]> {
     try {
-      return appStore.getAllTrips()
+      // Wait for store initialization
+      await appStore.waitForInitialization()
+      
+      const trips = appStore.getAllTrips()
+      return trips
     } catch (error) {
       throw new Error(`Failed to retrieve trips: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }

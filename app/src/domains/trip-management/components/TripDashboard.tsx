@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 
 import { useWeather } from '../../weather/hooks/useWeather'
 import { WeatherWidget } from '../../weather/components/WeatherWidget'
@@ -30,6 +30,21 @@ export function TripDashboard() {
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [editingTrip, setEditingTrip] = useState<Trip | null>(null)
   const [selectedTripForWeather, setSelectedTripForWeather] = useState<Trip | null>(null)
+  const [loadingTimeout, setLoadingTimeout] = useState(false)
+  
+  // Safety mechanism: if loading takes too long, allow interactions anyway
+  useEffect(() => {
+    if (tripsLoading.isLoading) {
+      const timer = setTimeout(() => {
+        console.warn('Loading timeout reached, enabling interactions')
+        setLoadingTimeout(true)
+      }, 15000) // 15 seconds max loading time
+      
+      return () => clearTimeout(timer)
+    } else {
+      setLoadingTimeout(false)
+    }
+  }, [tripsLoading.isLoading])
 
   const handleCreateTrip = useCallback(async (data: CreateTripData) => {
     await createTrip(data)
@@ -108,12 +123,9 @@ export function TripDashboard() {
         <div className={styles.headerActions}>
           {!showForm && (
             <button 
-              onClick={() => {
-                console.log('Create New Trip button clicked')
-                setShowCreateForm(true)
-              }}
+              onClick={() => setShowCreateForm(true)}
               className={styles.primaryButton}
-              disabled={tripsLoading.isLoading && !tripsLoading.error}
+              disabled={tripsLoading.isLoading && !tripsLoading.error && !loadingTimeout}
             >
               {tripsLoading.isLoading ? 'Loading...' : 'Create New Trip'}
             </button>
@@ -125,10 +137,7 @@ export function TripDashboard() {
         <div className={styles.error} role="alert">
           <p>Error loading trips: {tripsLoading.error}</p>
           <button 
-            onClick={() => {
-              console.log('TripDashboard: Retry button clicked')
-              refreshTrips()
-            }}
+            onClick={refreshTrips}
             className={styles.secondaryButton}
             style={{ marginTop: '1rem' }}
           >
@@ -169,7 +178,7 @@ export function TripDashboard() {
               trips={trips}
               onEditTrip={handleEditTrip}
               onDeleteTrip={handleDeleteTrip}
-              isLoading={tripsLoading.isLoading}
+              isLoading={tripsLoading.isLoading && !loadingTimeout}
               emptyMessage="No trips found. Create your first trip to get started!"
             />
 

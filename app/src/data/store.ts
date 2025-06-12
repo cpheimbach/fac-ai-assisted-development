@@ -9,12 +9,47 @@ export interface AppStore {
 
 class InMemoryStore {
   private store: AppStore
+  private initialized = false
 
   constructor() {
     this.store = {
       trips: new Map<string, Trip>(),
       weather: new Map<string, WeatherData>(),
       lastSync: new Date()
+    }
+    
+    // Initialize with persisted data
+    this.initializeFromPersistence()
+  }
+  
+  private async initializeFromPersistence() {
+    try {
+      // Import here to avoid circular dependency
+      const { persistenceService } = await import('./persistence')
+      const persistedData = await persistenceService.load()
+      
+      if (persistedData.trips.size > 0 || persistedData.weather.size > 0) {
+        this.store = persistedData
+      }
+      
+      this.initialized = true
+    } catch (error) {
+      console.error('InMemoryStore: Failed to initialize from persistence:', error)
+      this.initialized = true // Mark as initialized even if loading failed
+    }
+  }
+  
+  async waitForInitialization(): Promise<void> {
+    let attempts = 0
+    const maxAttempts = 50 // 5 seconds max wait
+    
+    while (!this.initialized && attempts < maxAttempts) {
+      await new Promise(resolve => setTimeout(resolve, 100))
+      attempts++
+    }
+    
+    if (!this.initialized) {
+      console.warn('InMemoryStore: Initialization timeout, proceeding with empty store')
     }
   }
 

@@ -21,7 +21,7 @@ class BrowserPersistenceService implements PersistenceService {
   private readonly backupKey = 'travel-app-backup'
 
   constructor() {
-    console.log('Using browser-compatible persistence with localStorage')
+    // Browser-compatible persistence with localStorage
   }
 
   private serializeStore(store: AppStore): SerializedStore {
@@ -73,7 +73,6 @@ class BrowserPersistenceService implements PersistenceService {
       
       if (typeof window !== 'undefined' && window.localStorage) {
         window.localStorage.setItem(this.storageKey, jsonData)
-        console.log('Data saved to localStorage successfully')
       } else {
         console.warn('localStorage not available, data not persisted')
       }
@@ -89,7 +88,6 @@ class BrowserPersistenceService implements PersistenceService {
         const jsonData = window.localStorage.getItem(this.storageKey)
         
         if (!jsonData) {
-          console.log('No existing data found in localStorage, returning empty store')
           return {
             trips: new Map(),
             weather: new Map(),
@@ -99,7 +97,6 @@ class BrowserPersistenceService implements PersistenceService {
 
         const serialized: SerializedStore = JSON.parse(jsonData)
         const store = this.deserializeStore(serialized)
-        console.log('Data loaded from localStorage successfully')
         return store
       } else {
         console.warn('localStorage not available, returning empty store')
@@ -126,7 +123,6 @@ class BrowserPersistenceService implements PersistenceService {
         if (data) {
           const backupId = `backup_${new Date().toISOString()}`
           window.localStorage.setItem(`${this.backupKey}_${backupId}`, data)
-          console.log('Backup created:', backupId)
           return backupId
         }
       }
@@ -142,7 +138,6 @@ class BrowserPersistenceService implements PersistenceService {
         const backupData = window.localStorage.getItem(`${this.backupKey}_${backup}`)
         if (backupData) {
           window.localStorage.setItem(this.storageKey, backupData)
-          console.log('Data restored from backup:', backup)
           return
         }
       }

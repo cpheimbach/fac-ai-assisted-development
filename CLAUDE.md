@@ -68,6 +68,9 @@ import './TripCard.module.css'
 - **Dashboard integration**: Unified interface with consolidated state management, weather selection patterns, professional responsive styling
 - **Error handling patterns**: Multi-layer error boundaries, SSR-safe global error handlers, custom error types, structured logging
 - **CSS Modules patterns**: CSS custom properties for theming, mobile-first responsive design, status-based styling, loading animations, scoped component styling
+- **Loading state safety**: Timeout mechanisms (15-second max) prevent indefinite UI blocking, loading state overrides for critical interactions
+- **Store initialization patterns**: Automatic persistence loading with `waitForInitialization()` pattern, browser/Node.js environment detection
+- **Component interaction patterns**: Edit/delete button logic with proper loading state management, `pointer-events: none` considerations for loading states
 
 ## Development Workflow
 
@@ -144,6 +147,9 @@ Before submitting any code, ensure the following steps are completed:
    - [ ] Code follows defined patterns
    - [ ] No debug/commented code
    - [ ] Error handling implemented
+   - [ ] Loading state management with timeout protection
+   - [ ] Browser compatibility verified
+   - [ ] User interactions functional (not blocked by loading states)
    - [ ] Tests written and passing
    - [ ] Documentation updated
    - [ ] Demo functionality works end-to-end
