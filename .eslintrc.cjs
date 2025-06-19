@@ -73,6 +73,19 @@ module.exports = {
       ],
     },
 
+    // Jest/Testing
+    {
+      files: ['**/*.test.{js,jsx,ts,tsx}', 'jest.setup.js'],
+      env: {
+        jest: true,
+        node: true,
+      },
+      rules: {
+        '@typescript-eslint/no-var-requires': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
+      },
+    },
+
     // Node
     {
       files: ['.eslintrc.cjs'],

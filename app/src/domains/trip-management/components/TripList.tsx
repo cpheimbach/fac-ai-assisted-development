@@ -1,5 +1,6 @@
 
 import { Trip } from '../types/trip'
+import { WeatherData } from '../../weather/types/weather'
 import { TripCard } from './TripCard'
 import styles from './TripList.module.css'
 
@@ -9,6 +10,10 @@ interface TripListProps {
   onDeleteTrip?: (id: string) => void
   isLoading?: boolean
   emptyMessage?: string
+  weatherData?: Map<string, WeatherData>
+  weatherLoading?: Set<string>
+  weatherErrors?: Map<string, string>
+  onLoadWeather?: (destination: string) => void
 }
 
 export function TripList({ 
@@ -16,7 +21,11 @@ export function TripList({
   onEditTrip, 
   onDeleteTrip, 
   isLoading = false,
-  emptyMessage = "No trips found. Create your first trip to get started!"
+  emptyMessage = "No trips found. Create your first trip to get started!",
+  weatherData,
+  weatherLoading,
+  weatherErrors,
+  onLoadWeather
 }: TripListProps) {
   
   if (trips.length === 0) {
@@ -84,6 +93,10 @@ export function TripList({
                 onEdit={onEditTrip}
                 onDelete={onDeleteTrip}
                 isLoading={isLoading}
+                weatherData={weatherData?.get(trip.destination)}
+                weatherLoading={weatherLoading?.has(trip.destination)}
+                weatherError={weatherErrors?.get(trip.destination)}
+                onLoadWeather={onLoadWeather}
               />
             ))}
           </div>
@@ -104,6 +117,10 @@ export function TripList({
                 onEdit={onEditTrip}
                 onDelete={onDeleteTrip}
                 isLoading={isLoading}
+                weatherData={weatherData?.get(trip.destination)}
+                weatherLoading={weatherLoading?.has(trip.destination)}
+                weatherError={weatherErrors?.get(trip.destination)}
+                onLoadWeather={onLoadWeather}
               />
             ))}
           </div>
@@ -124,6 +141,10 @@ export function TripList({
                 onEdit={onEditTrip}
                 onDelete={onDeleteTrip}
                 isLoading={isLoading}
+                weatherData={weatherData?.get(trip.destination)}
+                weatherLoading={weatherLoading?.has(trip.destination)}
+                weatherError={weatherErrors?.get(trip.destination)}
+                onLoadWeather={onLoadWeather}
               />
             ))}
           </div>

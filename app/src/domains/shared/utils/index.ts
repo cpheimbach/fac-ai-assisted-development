@@ -85,6 +85,9 @@ export function validateUpdateTripData(data: UpdateTripData): string[] {
 }
 
 export function sanitizeString(input: string): string {
+  if (!input || typeof input !== 'string') {
+    return ''
+  }
   return input.trim().replace(/\s+/g, ' ')
 }
 

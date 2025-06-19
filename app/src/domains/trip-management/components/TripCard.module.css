@@ -112,6 +112,106 @@
   color: var(--color-text-muted);
 }
 
+/* Weather Section */
+.weatherSection {
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--spacing-md);
+  margin-top: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.weatherLoading,
+.weatherError,
+.weatherInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+}
+
+.weatherLoading {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+}
+
+.weatherError {
+  background-color: var(--color-error-light);
+  color: var(--color-error);
+}
+
+.weatherInfo {
+  background-color: var(--color-primary-light);
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--spacing-xs);
+}
+
+.weatherCurrent {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.weatherIcon {
+  font-size: 1.125rem;
+}
+
+.weatherTemp {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--color-primary);
+}
+
+.weatherDescription {
+  color: var(--color-text-secondary);
+  text-transform: capitalize;
+}
+
+.weatherDetails {
+  display: flex;
+  gap: var(--spacing-md);
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.weatherLoadButton {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+}
+
+.weatherLoadButton:hover {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.weatherRetryButton {
+  background-color: var(--color-error);
+  color: white;
+  border: none;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: auto;
+}
+
+.weatherRetryButton:hover {
+  background-color: #dc2626;
+}
+
 .actions {
   display: flex;
   gap: var(--spacing-sm);

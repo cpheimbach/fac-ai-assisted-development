@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react'
 
 import { useWeather } from '../../weather/hooks/useWeather'
-import { WeatherWidget } from '../../weather/components/WeatherWidget'
+import { WeatherData } from '../../weather/types/weather'
 import { useTrips } from '../hooks/useTrips'
 import { CreateTripData, Trip, UpdateTripData } from '../types/trip'
 import { TripForm } from './TripForm'
@@ -22,15 +22,15 @@ export function TripDashboard() {
   const { 
     getWeatherForLocation, 
     weatherData, 
-    isLoading: weatherLoading, 
-    error: weatherError,
-    clearError 
+    error: weatherError
   } = useWeather()
 
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [editingTrip, setEditingTrip] = useState<Trip | null>(null)
-  const [selectedTripForWeather, setSelectedTripForWeather] = useState<Trip | null>(null)
   const [loadingTimeout, setLoadingTimeout] = useState(false)
+  const [weatherDataByDestination, setWeatherDataByDestination] = useState<Map<string, WeatherData>>(new Map())
+  const [weatherLoadingByDestination, setWeatherLoadingByDestination] = useState<Set<string>>(new Set())
+  const [weatherErrorsByDestination, setWeatherErrorsByDestination] = useState<Map<string, string>>(new Map())
   
   // Safety mechanism: if loading takes too long, allow interactions anyway
   useEffect(() => {
@@ -89,30 +89,40 @@ export function TripDashboard() {
     setEditingTrip(null)
   }, [])
 
-  const handleShowWeather = useCallback(async (trip: Trip) => {
-    setSelectedTripForWeather(trip)
-    clearError()
+  const handleLoadWeather = useCallback(async (destination: string) => {
+    // Set loading state for this destination
+    setWeatherLoadingByDestination(prev => new Set(prev).add(destination))
+    setWeatherErrorsByDestination(prev => {
+      const newMap = new Map(prev)
+      newMap.delete(destination)
+      return newMap
+    })
+    
     try {
-      await getWeatherForLocation(trip.destination)
+      await getWeatherForLocation(destination)
+      // Store the weather data by destination when successful
+      if (weatherData && weatherData.location === destination) {
+        setWeatherDataByDestination(prev => new Map(prev).set(destination, weatherData))
+      }
     } catch (error) {
       console.error('Failed to fetch weather:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Failed to load weather'
+      setWeatherErrorsByDestination(prev => new Map(prev).set(destination, errorMessage))
+    } finally {
+      setWeatherLoadingByDestination(prev => {
+        const newSet = new Set(prev)
+        newSet.delete(destination)
+        return newSet
+      })
     }
-  }, [getWeatherForLocation, clearError])
+  }, [getWeatherForLocation, weatherData])
 
-  const handleCloseWeather = useCallback(() => {
-    setSelectedTripForWeather(null)
-  }, [])
-
-  const handleRetryWeather = useCallback(async () => {
-    if (selectedTripForWeather) {
-      clearError()
-      try {
-        await getWeatherForLocation(selectedTripForWeather.destination)
-      } catch (error) {
-        console.error('Failed to retry weather:', error)
-      }
+  // Update weather data when the main weather hook provides new data
+  useEffect(() => {
+    if (weatherData && !weatherError) {
+      setWeatherDataByDestination(prev => new Map(prev).set(weatherData.location, weatherData))
     }
-  }, [selectedTripForWeather, getWeatherForLocation, clearError])
+  }, [weatherData, weatherError])
 
   const showForm = showCreateForm || editingTrip !== null
 
@@ -162,16 +172,6 @@ export function TripDashboard() {
           <section className={styles.tripsSection}>
             <div className={styles.sectionHeader}>
               <h2>Your Trips</h2>
-              {trips.length > 0 && (
-                <div className={styles.tripActions}>
-                  <button 
-                    onClick={() => setSelectedTripForWeather(null)}
-                    className={styles.secondaryButton}
-                  >
-                    Hide Weather
-                  </button>
-                </div>
-              )}
             </div>
 
             <TripList
@@ -180,49 +180,11 @@ export function TripDashboard() {
               onDeleteTrip={handleDeleteTrip}
               isLoading={tripsLoading.isLoading && !loadingTimeout}
               emptyMessage="No trips found. Create your first trip to get started!"
+              weatherData={weatherDataByDestination}
+              weatherLoading={weatherLoadingByDestination}
+              weatherErrors={weatherErrorsByDestination}
+              onLoadWeather={handleLoadWeather}
             />
-
-            {trips.length > 0 && (
-              <div className={styles.weatherSection}>
-                <h3>Weather Information</h3>
-                <div className={styles.weatherActions}>
-                  {trips.map(trip => (
-                    <button
-                      key={trip.id}
-                      onClick={() => handleShowWeather(trip)}
-                      className={`${styles.weatherButton} ${
-                        selectedTripForWeather?.id === trip.id ? styles.weatherButtonActive : ''
-                      }`}
-                      disabled={weatherLoading}
-                    >
-                      {trip.destination}
-                    </button>
-                  ))}
-                </div>
-
-                {selectedTripForWeather && (
-                  <div className={styles.weatherDisplay}>
-                    <div className={styles.weatherHeader}>
-                      <h4>Weather for {selectedTripForWeather.name}</h4>
-                      <button 
-                        onClick={handleCloseWeather}
-                        className={styles.closeButton}
-                        type="button"
-                        aria-label="Close weather display"
-                      >
-                        ×
-                      </button>
-                    </div>
-                    <WeatherWidget
-                      weatherData={weatherData}
-                      isLoading={weatherLoading}
-                      error={weatherError}
-                      onRetry={handleRetryWeather}
-                    />
-                  </div>
-                )}
-              </div>
-            )}
           </section>
         </div>
       </main>
